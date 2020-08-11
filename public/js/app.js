@@ -53370,7 +53370,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
   }, {
     path: '*',
     component: _views_error_404_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
-  }] //mode: 'history' //quitar el # de las rutas
+  }],
+  mode: 'history' //quitar el # de las rutas
 
 }));
 

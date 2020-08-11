@@ -36,6 +36,6 @@ export default new Router({
             component: Error404
         }
     ],
-    //mode: 'history' //quitar el # de las rutas
+    mode: 'history' //quitar el # de las rutas
 
 })
