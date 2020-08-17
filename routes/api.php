@@ -18,6 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+Route::get("/producto/{id}/calificar_estrellas", "ProductoController@calificar")->name("califica_prod");
+
 Route::get("/cliente", "ClienteController@listar")->name("cliente.listar");
 Route::post("/cliente", "ClienteController@guardar")->name("cliente.guardar");
 Route::get("/cliente/{id}", "ClienteController@mostrar")->name("cliente.mostrar");

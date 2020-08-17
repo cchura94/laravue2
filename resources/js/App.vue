@@ -1,16 +1,24 @@
 <template>
-  <div>
-    <router-link to="/">INICIO</router-link>|
-    <router-link to="/contacto">CONTACTO</router-link>|
-    <router-link to="/nosotros">NOSOTROS</router-link>
-    <router-link to="/publicacion">Publicacion</router-link>
-    <router-view></router-view>
-  </div>
+  <v-app>
+    <Menu></Menu>
+
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+
+    <PiePagina></PiePagina>
+  </v-app>
 </template>
 
 <script>
-export default {};
+import Menu from "./components/navegacion/Menu.vue";
+import PiePagina from "./components/navegacion/Pie";
+export default {
+  components: {
+    Menu,
+    PiePagina
+  }
+};
 </script>
 
-<style>
-</style>
+<style></style>

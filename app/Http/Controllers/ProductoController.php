@@ -26,7 +26,19 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Validar los datos
+
+        //Subir Imagen
+        $nombre_imagen = "";
+        //Guardar en la base datos
+        $producto = new Producto;
+        $producto->nombre = $request->nombre;
+        $producto->precio = $request->precio;
+        $producto->detalle = $request->detalle;
+        $producto->imagen = $nombre_imagen;
+        $producto->save();
+        
+        return response()->json(["mensaje" => "El producto se ha registrado correctamente"], 201);
     }
 
     /**
@@ -38,7 +50,11 @@ class ProductoController extends Controller
     public function show($id)
     {
         //select * from productos where id = $id 
-        // Producto::find($id)
+        $producto = Producto::find($id);
+        if($producto){
+            return response()->json($producto, 200);
+        }
+        return response()->json(["status" => 404, "Mensaje" => "Producto no encontrado"]);
     }
 
     /**
@@ -50,7 +66,26 @@ class ProductoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //validamos (del lado del servidor)
+
+        //preguntamos si cambio la imagen
+
+        //modificamos
+        $producto = Producto::find($id);
+        if($producto){
+            $producto->nombre = $request->nombre;
+            $producto->precio = $request->precio;
+            $producto->detalle = $request->detalle;
+            $producto->imagen = $nombre_imagen;
+            $producto->save();
+
+            return response()->json(["mensaje" => "El producto se ha modificado correctamente"], 200);
+
+        }
+
+        return response()->json(["status" => 404, "Mensaje" => "Producto no encontrado"]);
+
+
     }
 
     /**
@@ -61,6 +96,22 @@ class ProductoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $producto = Producto::find($id);
+        if($producto){
+            $producto->delete();
+            return response()->json(["mensaje" => "El producto se ha eliminado"], 200);
+
+        }
+        return response()->json(["status" => 404, "Mensaje" => "Producto no encontrado"]);
+   
+    }
+
+    public function calificar($id)
+    {
+        $producto = Producto::find($id);
+        $producto->estrella = $producto->estrella +1;
+        $producto->save(); 
+        return response()->json(["status" => 404, "Mensaje" => "Producto calicado"]);
+   
     }
 }
