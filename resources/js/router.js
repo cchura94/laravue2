@@ -6,6 +6,10 @@ import Contacto from './views/Contacto.vue'
 import Nosotros from './views/Nosotros.vue'
 import Publicacion from './views/Publicacion.vue'
 import Error404 from './views/error/404.vue'
+//Administrador
+import Admin from './views/admin/Admin.vue'
+import Cliente from './components/admin/cliente/Cliente.vue'
+import Producto from './components/admin/producto/Producto.vue'
 
 
 Vue.use(Router)
@@ -32,10 +36,26 @@ export default new Router({
             component: Publicacion
         },
         {
+            path: '/admin',
+            name: 'Admin',
+            component: Admin,
+            children: [{
+                    path: 'cliente',
+                    name: 'Cliente',
+                    component: Cliente
+                },
+                {
+                    path: 'producto',
+                    name: 'Producto',
+                    component: Producto
+                }
+            ]
+        },
+        {
             path: '*',
             component: Error404
         }
     ],
-    mode: 'history' //quitar el # de las rutas
+    //mode: 'history' //quitar el # de las rutas
 
 })
