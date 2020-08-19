@@ -7,7 +7,6 @@ export function http() {
     return axios.create({
         baseURL: base_url
     })
-
 }
 
 export function httpFile() {

@@ -23,15 +23,30 @@
 </template>
 
 <script>
-import { http } from "./../../../services/api";
+import * as servicio from "./../../../services/productoService";
+
 export default {
   data() {
     return {
       productos: []
     };
   },
-  created() {
-    http()
+  async created() {
+    try {
+      this.productos = await servicio.listarProductos();
+    } catch (error) {
+      console.log(error);
+    }
+
+    /*listarProductos()
+      .then(respuesta => {
+        this.productos = respuesta;
+      })
+      .catch(error => {
+        console.log(error);
+      });*/
+
+    /*http()
       .get("/producto")
       .then(datos => {
         this.productos = datos.data;
@@ -39,7 +54,7 @@ export default {
       })
       .catch(error => {
         console.log(error);
-      });
+      });*/
   }
 };
 </script>

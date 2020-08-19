@@ -10,6 +10,7 @@ import Error404 from './views/error/404.vue'
 import Admin from './views/admin/Admin.vue'
 import Cliente from './components/admin/cliente/Cliente.vue'
 import Producto from './components/admin/producto/Producto.vue'
+import Login from './views/Login.vue'
 
 
 Vue.use(Router)
@@ -34,6 +35,11 @@ export default new Router({
             path: '/publicacion',
             name: 'Publicacion',
             component: Publicacion
+        },
+        {
+            path: '/ingresar',
+            name: 'Login',
+            component: Login
         },
         {
             path: '/admin',

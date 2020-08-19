@@ -29,4 +29,7 @@ Route::delete("/cliente/{id}", "ClienteController@eliminar")->name("cliente.elim
 
 Route::apiresource("/producto", "ProductoController");
 Route::apiresource("/categoria", "CategoriaController");
+Route::apiresource("/pais", "PaisController");
+Route::apiresource("/ciudad", "CiudadController");
+Route::apiresource("/municipio", "MunicipioController");
 
