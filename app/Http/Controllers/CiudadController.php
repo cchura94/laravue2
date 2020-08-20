@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Ciudad;
+use App\Municipio;
 class CiudadController extends Controller
 {
     /**
@@ -45,7 +46,7 @@ class CiudadController extends Controller
      */
     public function show($id)
     {
-        //
+        return Municipio::where('ciudad_id', $id)->get();
     }
 
     /**

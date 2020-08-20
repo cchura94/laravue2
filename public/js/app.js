@@ -2009,12 +2009,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       pais: 0,
-      paises: []
+      paises: [],
+      pais_id: -1,
+      ciudad_id: -1,
+      ciudades: [],
+      municipios: [],
+      municipio_id: -1,
+      estado: true
     };
   },
   created: function created() {
@@ -2024,6 +2059,33 @@ __webpack_require__.r(__webpack_exports__);
       _this.paises = datos.data;
       console.log(_this.paises);
     });
+  },
+  methods: {
+    consultarCiudades: function consultarCiudades() {
+      var _this2 = this;
+
+      this.resetCiudades();
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("http://localhost:8000/api/pais/" + this.pais_id).then(function (datos) {
+        _this2.ciudades = datos.data;
+        console.log(_this2.ciudades);
+      });
+    },
+    consultarMunicipio: function consultarMunicipio() {
+      var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("http://localhost:8000/api/ciudad/" + this.ciudad_id).then(function (datos) {
+        _this3.municipios = datos.data;
+        console.log(_this3.municipios);
+        _this3.estado = false;
+      });
+    },
+    resetCiudades: function resetCiudades() {
+      this.ciudad_id = null;
+      this.ciudades = [];
+      this.municipios = [];
+      this.municipio_id = null;
+      this.estado = true;
+    }
   }
 });
 
@@ -38965,9 +39027,65 @@ var render = function() {
       _vm._v(" "),
       _c("hr"),
       _vm._v(" "),
-      _c("label", { attrs: { for: "" } }, [_vm._v("Seleccionar El Pais")]),
+      _c("label", [_vm._v("Seleccionar El Pais")]),
       _vm._v(" "),
-      _c("v-select", { attrs: { items: _vm.paises } }),
+      _c("v-select", {
+        attrs: { items: _vm.paises, "item-text": "nombre", "item-value": "id" },
+        on: { change: _vm.consultarCiudades },
+        model: {
+          value: _vm.pais_id,
+          callback: function($$v) {
+            _vm.pais_id = $$v
+          },
+          expression: "pais_id"
+        }
+      }),
+      _vm._v(" "),
+      _c("h5", [_vm._v("Pais seleccionado: " + _vm._s(_vm.pais_id))]),
+      _vm._v(" "),
+      _c("label", [_vm._v("Seleccionar Ciudad:")]),
+      _vm._v(" "),
+      _c("v-select", {
+        attrs: {
+          items: _vm.ciudades,
+          "item-text": "nombre",
+          "item-value": "id"
+        },
+        on: {
+          change: function($event) {
+            return _vm.consultarMunicipio()
+          }
+        },
+        model: {
+          value: _vm.ciudad_id,
+          callback: function($$v) {
+            _vm.ciudad_id = $$v
+          },
+          expression: "ciudad_id"
+        }
+      }),
+      _vm._v(" "),
+      _c("h5", [_vm._v("Ciudad seleccionado: " + _vm._s(_vm.ciudad_id))]),
+      _vm._v(" "),
+      _c("label", [_vm._v("Seleccionar Municipio:")]),
+      _vm._v(" "),
+      _c("v-select", {
+        attrs: {
+          items: _vm.municipios,
+          "item-text": "nombre",
+          "item-value": "id",
+          disabled: _vm.estado
+        },
+        model: {
+          value: _vm.municipio_id,
+          callback: function($$v) {
+            _vm.municipio_id = $$v
+          },
+          expression: "municipio_id"
+        }
+      }),
+      _vm._v(" "),
+      _c("hr"),
       _vm._v(" "),
       _c(
         "ul",

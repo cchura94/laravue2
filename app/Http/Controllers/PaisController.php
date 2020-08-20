@@ -47,7 +47,7 @@ class PaisController extends Controller
      */
     public function show($id)
     {
-        //
+        return \App\Ciudad::where('pais_id',"=", $id)->get();
     }
 
     /**
