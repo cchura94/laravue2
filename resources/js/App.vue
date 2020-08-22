@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Menu></Menu>
+    <MenuAdmin></MenuAdmin>
 
     <v-main>
       <router-view></router-view>
@@ -12,11 +12,13 @@
 
 <script>
 import Menu from "./components/navegacion/Menu.vue";
+import MenuAdmin from "./components/navegacion/MenuAdmin";
 import PiePagina from "./components/navegacion/Pie";
 export default {
   components: {
     Menu,
-    PiePagina
+    PiePagina,
+    MenuAdmin
   }
 };
 </script>

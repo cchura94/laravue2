@@ -14,6 +14,22 @@ class ClienteController extends Controller
 
     public function guardar(Request $request)
     {
+        $reglas = [
+            "nombres" => "required|min:2|max:255",
+            "apellidos" => "required|min:2|max:255",
+            "correo" => "unique:clientes|min:2|max:255",
+            "ci_nit" => "required|min:5|max:15",
+            "empresa" => "required",
+            "telefono" => "required|min:6|max:15"
+        ];
+        $validator = \Validator::make($request->all(), $reglas);
+        if($validator->fails()){
+            return response()->json([
+                "creado" => false,
+                "errores" => $validator->errors()->all()
+            ]);
+        }
+
         $cliente = new Cliente;
         $cliente->nombres= $request->nombres;
         $cliente->apellidos =$request->apellidos;
@@ -35,6 +51,22 @@ class ClienteController extends Controller
 
     public function modificar($id, Request $request)
     {
+        $reglas = [
+            "nombres" => "required|min:2|max:255",
+            "apellidos" => "required|min:2|max:255",
+            "correo" => "min:2|max:255",
+            "ci_nit" => "required|min:5|max:15",
+            "empresa" => "required",
+            "telefono" => "required|min:6|max:15"
+        ];
+        $validator = \Validator::make($request->all(), $reglas);
+        if($validator->fails()){
+            return response()->json([
+                "creado" => false,
+                "errores" => $validator->errors()->all()
+            ]);
+        }
+
         $cliente = Cliente::find($id);
         $cliente->nombres= $request->nombres;
         $cliente->apellidos =$request->apellidos;

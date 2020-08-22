@@ -12,8 +12,13 @@ export async function listarProductos() {
     })*/
 }
 
-export function guardarProducto(datos) {
-    return "Guardando";
+/**
+ * Función para guardar un Producto
+ * @param {*} datos 
+ */
+export async function guardarProducto(datos) {
+    const respuesta = await http().post("/producto", datos);
+    return respuesta.data
 }
 
 export function modificarProducto(datos) {

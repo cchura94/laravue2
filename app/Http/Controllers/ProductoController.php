@@ -14,6 +14,8 @@ class ProductoController extends Controller
      */
     public function index()
     {
+        
+        //return $now = \Carbon\Carbon::now();
         $productos = Producto::All();
         return response()->json($productos) ;
     }
@@ -27,7 +29,19 @@ class ProductoController extends Controller
     public function store(Request $request)
     {
         //Validar los datos
+        $reglas = [
+            "nombre" => "required|min:2|max:255",
+            "precio" => "required"
+        ];
+        $validator = \Validator::make($request->all(), $reglas);
+        if($validator->fails()){
+            return response()->json([
+                "creado" => false,
+                "errores" => $validator->errors()->all()
+            ]);
+        }
 
+        //$request->validate($reglas);
         //Subir Imagen
         $nombre_imagen = "";
         //Guardar en la base datos
@@ -67,6 +81,17 @@ class ProductoController extends Controller
     public function update(Request $request, $id)
     {
         //validamos (del lado del servidor)
+        $reglas = [
+            "nombre" => "required|min:2|max:255",
+            "precio" => "required"
+        ];
+        $validator = \Validator::make($request->all(), $reglas);
+        if($validator->fails()){
+            return response()->json([
+                "creado" => false,
+                "errores" => $validator->errors()->all()
+            ]);
+        }
 
         //preguntamos si cambio la imagen
 
