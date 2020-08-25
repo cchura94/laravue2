@@ -39,7 +39,7 @@ class ClienteController extends Controller
         $cliente->ci_nit =$request->ci_nit;
         $cliente->save();
         
-        return response()->jon(["mensaje" => "Cliente registrado"]);
+        return response()->json(["mensaje" => "Cliente registrado"]);
 
     }
 
