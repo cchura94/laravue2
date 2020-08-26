@@ -2572,6 +2572,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2589,6 +2594,11 @@ __webpack_require__.r(__webpack_exports__);
         url: "/ingresar"
       }]
     };
+  },
+  created: function created() {
+    setInterval(function () {
+      document.getElementById("hora").innerHTML = new Date().toLocaleTimeString();
+    }, 1000);
   }
 });
 
@@ -43482,8 +43492,12 @@ var render = function() {
             },
             [
               _vm._v(
-                "\n      " + _vm._s(new Date().getFullYear()) + " —\n      "
+                "\n            " +
+                  _vm._s(new Date().getMinutes()) +
+                  " —\n\n            "
               ),
+              _c("div", { attrs: { id: "hora" } }),
+              _vm._v(" "),
               _c("strong", [_vm._v("Mi Empresa")])
             ]
           )

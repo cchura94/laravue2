@@ -18,3 +18,7 @@ Route::get('/', function () {
 });
 
 Route::get("/contacto", "ClienteController@contactos")->name("contactos");
+
+Route::get("/login", function(){
+    return ["mensaje" => "Debe enviar un token de Autorización"];
+})->name("login");
