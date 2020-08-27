@@ -12,6 +12,26 @@ import Cliente from './components/admin/cliente/Cliente.vue'
 import Producto from './components/admin/producto/Producto.vue'
 import Login from './views/Login.vue'
 
+function authGuard(to, from, next) {
+    try {
+        const token = JSON.parse(atob(localStorage.getItem("token")))
+        if (token && token.access_token) {
+            next()
+        } else {
+            next({
+                name: "Login"
+            })
+        }
+
+    } catch (error) {
+        console.log(error)
+        localStorage.removeItem("token");
+        next({
+            name: "Login"
+        })
+    }
+}
+
 
 Vue.use(Router)
 
@@ -34,7 +54,7 @@ export default new Router({
         {
             path: '/publicacion',
             name: 'Publicacion',
-            component: Publicacion
+            component: Publicacion,
         },
         {
             path: '/ingresar',
@@ -45,15 +65,27 @@ export default new Router({
             path: '/admin',
             name: 'Admin',
             component: Admin,
+            beforeEnter: authGuard,
+            meta: {
+                requireAuth: true
+            },
             children: [{
                     path: 'cliente',
                     name: 'Cliente',
-                    component: Cliente
+                    component: Cliente,
+                    beforeEnter: authGuard,
+                    meta: {
+                        requireAuth: true
+                    },
                 },
                 {
                     path: 'producto',
                     name: 'Producto',
-                    component: Producto
+                    component: Producto,
+                    beforeEnter: authGuard,
+                    meta: {
+                        requireAuth: true
+                    },
                 }
             ]
         },

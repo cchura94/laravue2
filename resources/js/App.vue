@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <MenuAdmin></MenuAdmin>
+    <MenuAdmin v-if="$route.meta.requireAuth"></MenuAdmin>
+    <Menu v-if="!$route.meta.requireAuth"></Menu>
 
     <v-main>
       <router-view></router-view>
@@ -19,6 +20,15 @@ export default {
     Menu,
     PiePagina,
     MenuAdmin
+  },
+  data() {
+    return {
+      auth: false
+    };
+  },
+  created() {
+    //console.log(this.$route);
+    //this.auth = this.$route.meta.requireAuth;
   }
 };
 </script>

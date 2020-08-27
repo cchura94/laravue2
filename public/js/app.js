@@ -1935,6 +1935,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -1943,6 +1944,14 @@ __webpack_require__.r(__webpack_exports__);
     Menu: _components_navegacion_Menu_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     PiePagina: _components_navegacion_Pie__WEBPACK_IMPORTED_MODULE_2__["default"],
     MenuAdmin: _components_navegacion_MenuAdmin__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      auth: false
+    };
+  },
+  created: function created() {//console.log(this.$route);
+    //this.auth = this.$route.meta.requireAuth;
   }
 });
 
@@ -2795,6 +2804,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../config/config */ "./resources/js/config/config.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -2831,14 +2845,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {};
+    return {
+      usuario: {}
+    };
   },
   methods: {
     ingresar: function ingresar() {
-      this.$router.push({
-        name: "Admin"
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(_config_config__WEBPACK_IMPORTED_MODULE_1__["base_url"] + "/auth/login", this.usuario).then(function (respuesta) {
+        console.log(respuesta.data);
+        localStorage.setItem("token", btoa(JSON.stringify(respuesta.data)));
+        sweetalert2__WEBPACK_IMPORTED_MODULE_2___default.a.fire("Bienvenido", "Aceptar", "success");
+
+        _this.$router.push({
+          name: "Admin"
+        });
+      })["catch"](function (error) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_2___default.a.fire("Error de autenticación", "Aceptar", "error");
       });
     }
   }
@@ -42455,7 +42492,9 @@ var render = function() {
   return _c(
     "v-app",
     [
-      _c("MenuAdmin"),
+      _vm.$route.meta.requireAuth ? _c("MenuAdmin") : _vm._e(),
+      _vm._v(" "),
+      !_vm.$route.meta.requireAuth ? _c("Menu") : _vm._e(),
       _vm._v(" "),
       _c("v-main", [_c("router-view")], 1),
       _vm._v(" "),
@@ -43921,6 +43960,13 @@ var render = function() {
                                       name: "login",
                                       "prepend-icon": "mdi-account",
                                       type: "text"
+                                    },
+                                    model: {
+                                      value: _vm.usuario.email,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.usuario, "email", $$v)
+                                      },
+                                      expression: "usuario.email"
                                     }
                                   }),
                                   _vm._v(" "),
@@ -43931,10 +43977,22 @@ var render = function() {
                                       name: "password",
                                       "prepend-icon": "mdi-lock",
                                       type: "password"
+                                    },
+                                    model: {
+                                      value: _vm.usuario.password,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.usuario, "password", $$v)
+                                      },
+                                      expression: "usuario.password"
                                     }
                                   })
                                 ],
                                 1
+                              ),
+                              _vm._v(
+                                "\n              " +
+                                  _vm._s(_vm.usuario) +
+                                  "\n            "
                               )
                             ],
                             1
@@ -103697,6 +103755,27 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+function authGuard(to, from, next) {
+  try {
+    var token = JSON.parse(atob(localStorage.getItem("token")));
+
+    if (token && token.access_token) {
+      next();
+    } else {
+      next({
+        name: "Login"
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    localStorage.removeItem("token");
+    next({
+      name: "Login"
+    });
+  }
+}
+
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: [{
@@ -103723,14 +103802,26 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
     path: '/admin',
     name: 'Admin',
     component: _views_admin_Admin_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+    beforeEnter: authGuard,
+    meta: {
+      requireAuth: true
+    },
     children: [{
       path: 'cliente',
       name: 'Cliente',
-      component: _components_admin_cliente_Cliente_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
+      component: _components_admin_cliente_Cliente_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+      beforeEnter: authGuard,
+      meta: {
+        requireAuth: true
+      }
     }, {
       path: 'producto',
       name: 'Producto',
-      component: _components_admin_producto_Producto_vue__WEBPACK_IMPORTED_MODULE_9__["default"]
+      component: _components_admin_producto_Producto_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+      beforeEnter: authGuard,
+      meta: {
+        requireAuth: true
+      }
     }]
   }, {
     path: '*',

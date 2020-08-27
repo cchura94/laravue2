@@ -11,16 +11,24 @@
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field label="Correo" name="login" prepend-icon="mdi-account" type="text"></v-text-field>
+                  <v-text-field
+                    label="Correo"
+                    v-model="usuario.email"
+                    name="login"
+                    prepend-icon="mdi-account"
+                    type="text"
+                  ></v-text-field>
 
                   <v-text-field
                     id="password"
                     label="Contraseña"
+                    v-model="usuario.password"
                     name="password"
                     prepend-icon="mdi-lock"
                     type="password"
                   ></v-text-field>
                 </v-form>
+                {{ usuario }}
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -35,13 +43,28 @@
 </template>
 
 <script>
+import axios from "axios";
+import { base_url } from "./../config/config";
+import Swal from "sweetalert2";
 export default {
   data() {
-    return {};
+    return {
+      usuario: {}
+    };
   },
   methods: {
     ingresar() {
-      this.$router.push({ name: "Admin" });
+      axios
+        .post(base_url + "/auth/login", this.usuario)
+        .then(respuesta => {
+          console.log(respuesta.data);
+          localStorage.setItem("token", btoa(JSON.stringify(respuesta.data)));
+          Swal.fire("Bienvenido", "Aceptar", "success");
+          this.$router.push({ name: "Admin" });
+        })
+        .catch(error => {
+          Swal.fire("Error de autenticación", "Aceptar", "error");
+        });
     }
   }
 };
