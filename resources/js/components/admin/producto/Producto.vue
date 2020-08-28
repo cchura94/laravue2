@@ -116,6 +116,8 @@ export default {
           console.log(respuesta);
           if (respuesta.creado == false) {
             console.log(respuesta.errores);
+          } else {
+            this.dialog = false;
           }
         })
         .catch(error => {

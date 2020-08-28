@@ -25,6 +25,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "jspdf": "^2.1.0",
         "sweetalert2": "^9.17.1",
         "vue-router": "^3.4.2",
         "vuetify": "^2.3.8"

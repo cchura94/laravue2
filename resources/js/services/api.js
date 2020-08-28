@@ -1,11 +1,13 @@
 import axios from 'axios'
 import {
-    base_url
+    base_url,
+    getHeader
 } from './../config/config.js'
 
 export function http() {
     return axios.create({
-        baseURL: base_url
+        baseURL: base_url,
+        headers: getHeader()
     })
 }
 

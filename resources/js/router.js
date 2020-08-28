@@ -12,6 +12,8 @@ import Cliente from './components/admin/cliente/Cliente.vue'
 import Producto from './components/admin/producto/Producto.vue'
 import Login from './views/Login.vue'
 
+import Pedido from './components/admin/pedido/Pedido.vue'
+
 function authGuard(to, from, next) {
     try {
         const token = JSON.parse(atob(localStorage.getItem("token")))
@@ -82,6 +84,15 @@ export default new Router({
                     path: 'producto',
                     name: 'Producto',
                     component: Producto,
+                    beforeEnter: authGuard,
+                    meta: {
+                        requireAuth: true
+                    },
+                },
+                {
+                    path: 'pedido/:id',
+                    name: 'Pedido',
+                    component: Pedido,
                     beforeEnter: authGuard,
                     meta: {
                         requireAuth: true

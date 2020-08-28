@@ -46,10 +46,11 @@ Route::group([
         Route::put("/cliente/{id}", "ClienteController@modificar")->name("cliente.modificar");
         Route::delete("/cliente/{id}", "ClienteController@eliminar")->name("cliente.eliminar");
 
-        Route::apiresource("/producto", "ProductoController");
+        
         Route::apiresource("/categoria", "CategoriaController");
         Route::apiresource("/pedido", "PedidoController");
         Route::apiresource("/usuario", "UsuarioController");
+        Route::apiresource("/producto", "ProductoController");
 
         Route::apiresource("/pais", "PaisController");
         Route::apiresource("/ciudad", "CiudadController");

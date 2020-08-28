@@ -44,6 +44,12 @@ class ProductoController extends Controller
         //$request->validate($reglas);
         //Subir Imagen
         $nombre_imagen = "";
+        if($file = $request->file('imagen')){
+            $nombre_imagen = $file->getClientOriginalName();
+            $file->move("imagenes/",$nombre_imagen);
+
+            $nombre_imagen = "/imagenes/$nombre_imagen";
+        }
         //Guardar en la base datos
         $producto = new Producto;
         $producto->nombre = $request->nombre;
