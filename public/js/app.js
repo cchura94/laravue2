@@ -2405,7 +2405,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _config_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../../../config/config */ "./resources/js/config/config.js");
 /* harmony import */ var _services_productoService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../../../services/productoService */ "./resources/js/services/productoService.js");
-/* harmony import */ var jspdf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! jspdf */ "./node_modules/jspdf/dist/jspdf.es.min.js");
+/* harmony import */ var _services_pedidoService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../../../services/pedidoService */ "./resources/js/services/pedidoService.js");
+/* harmony import */ var jspdf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! jspdf */ "./node_modules/jspdf/dist/jspdf.es.min.js");
 //
 //
 //
@@ -2446,6 +2447,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -2455,8 +2495,15 @@ __webpack_require__.r(__webpack_exports__);
     return {
       id: 0,
       cliente: {},
-      productos: []
+      productos: [],
+      total: 0,
+      carrito: []
     };
+  },
+  computed: {
+    calcular_total: function calcular_total() {
+      return "Bs. " + this.total;
+    }
   },
   created: function created() {
     var _this = this;
@@ -2475,11 +2522,76 @@ __webpack_require__.r(__webpack_exports__);
       _this.$router.push({
         name: "Login"
       });
-    }); // Default export is a4 paper, portrait, using millimeters for units
+    });
+  },
+  methods: {
+    agregarCarrito: function agregarCarrito(prod) {
+      console.log(this.buscar(prod));
 
-    var doc = new jspdf__WEBPACK_IMPORTED_MODULE_3__["jsPDF"]();
-    doc.text("Hola Mundo", 10, 50);
-    doc.save("a4.pdf");
+      if (this.buscar(prod)) {
+        alert("El producto ya esta en el carrito");
+      } else {
+        var pedido = {
+          id: prod.id,
+          nombre: prod.nombre,
+          precio: prod.precio,
+          cantidad: 1
+        };
+        this.carrito.push(pedido);
+        this.total += parseFloat(prod.precio);
+      }
+    },
+    buscar: function buscar(prod) {
+      var cont = 0;
+      this.carrito.forEach(function (p) {
+        console.log(p, " **** ", prod);
+
+        if (p.id == prod.id) {
+          cont++;
+        }
+      });
+
+      if (cont > 0) {
+        return true;
+      }
+
+      return false;
+    },
+    incrementar: function incrementar(item) {
+      item.cantidad++;
+      this.total += parseFloat(item.precio);
+    },
+    decrementar: function decrementar(item) {
+      if (item.cantidad != 1) {
+        item.cantidad--;
+        this.total -= parseFloat(item.precio);
+      }
+    },
+    terminarVenta: function terminarVenta() {
+      var _this2 = this;
+
+      var productos = [];
+
+      for (var i = 0; i < this.carrito.length; i++) {
+        var ped = this.carrito[i];
+        productos.push(ped.id);
+      }
+
+      var datos = {
+        cliente_id: this.id,
+        monto_total: this.total,
+        productos: productos
+      };
+      _services_pedidoService__WEBPACK_IMPORTED_MODULE_3__["guardarPedido"](datos).then(function (respuesta) {
+        console.log(respuesta);
+        var doc = new jspdf__WEBPACK_IMPORTED_MODULE_4__["jsPDF"]();
+        doc.text(" Nuevo Pedido", 70, 15);
+        doc.text("Cliente: ".concat(_this2.cliente.nombres, " ").concat(_this2.cliente.apellidos), 10, 25);
+        doc.save("nuevo_pedido.pdf");
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
   }
 });
 
@@ -43851,7 +43963,7 @@ var render = function() {
                 _vm._l(_vm.productos, function(prod, index) {
                   return _c(
                     "v-col",
-                    { key: index, attrs: { cols: "4" } },
+                    { key: index, attrs: { cols: "6" } },
                     [
                       _c(
                         "v-card",
@@ -43859,16 +43971,71 @@ var render = function() {
                           attrs: { color: "#a80F73", dark: "", elevation: "10" }
                         },
                         [
-                          _c("v-img", {
-                            attrs: {
-                              src: "//localhost:8000" + prod.imagen,
-                              height: "250"
-                            }
-                          }),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "d-flex flex-no-wrap justify-space-between"
+                            },
+                            [
+                              _c(
+                                "div",
+                                [
+                                  _c("v-card-title", {
+                                    staticClass: "headline",
+                                    domProps: {
+                                      textContent: _vm._s(prod.nombre)
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-card-subtitle", {
+                                    domProps: {
+                                      textContent: _vm._s(prod.precio)
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              prod.imagen
+                                ? _c(
+                                    "v-avatar",
+                                    {
+                                      staticClass: "ma-3",
+                                      attrs: { size: "125", tile: "" }
+                                    },
+                                    [
+                                      _c("v-img", {
+                                        attrs: {
+                                          src: "//localhost:8000" + prod.imagen
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                : _vm._e()
+                            ],
+                            1
+                          ),
                           _vm._v(" "),
-                          _c("v-card-title", { staticClass: "headline" }, [
-                            _vm._v(_vm._s(prod.nombre))
-                          ])
+                          _c(
+                            "v-card-actions",
+                            [
+                              _c(
+                                "v-btn",
+                                {
+                                  attrs: { text: "" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.agregarCarrito(prod)
+                                    }
+                                  }
+                                },
+                                [_vm._v("add carrito")]
+                              )
+                            ],
+                            1
+                          )
                         ],
                         1
                       )
@@ -43882,9 +44049,109 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("v-col", { attrs: { cols: "4" } }, [
-            _c("h2", [_vm._v("Productos seleccionados")])
-          ])
+          _c(
+            "v-col",
+            { attrs: { cols: "4" } },
+            [
+              _c("h2", [_vm._v("Productos seleccionados")]),
+              _vm._v(" "),
+              _c(
+                "v-card",
+                { attrs: { color: "#880F33", dark: "", elevation: "10" } },
+                [
+                  _c("v-card-title", { staticClass: "headline" }, [
+                    _vm._v("Total a Cobrar:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-row",
+                    [
+                      _c("h5", [_vm._v(_vm._s(_vm.calcular_total))]),
+                      _vm._v(" "),
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          on: {
+                            click: function($event) {
+                              return _vm.terminarVenta()
+                            }
+                          }
+                        },
+                        [_vm._v("Cobrar")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.carrito, function(item, i) {
+                return _c(
+                  "v-col",
+                  { key: i, attrs: { cols: "12" } },
+                  [
+                    _c("v-card", { attrs: { color: "#ff9800", dark: "" } }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "d-flex flex-no-wrap justify-space-between"
+                        },
+                        [
+                          _c(
+                            "div",
+                            [
+                              _c("v-card-title", {
+                                staticClass: "headline",
+                                domProps: { textContent: _vm._s(item.nombre) }
+                              }),
+                              _vm._v(" "),
+                              _c("v-card-subtitle", {
+                                domProps: { textContent: _vm._s(item.precio) }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.incrementar(item)
+                                }
+                              }
+                            },
+                            [_vm._v("+")]
+                          ),
+                          _vm._v(" "),
+                          _c("v-btn", [_vm._v(_vm._s(item.cantidad))]),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.decrementar(item)
+                                }
+                              }
+                            },
+                            [_vm._v("-")]
+                          )
+                        ],
+                        1
+                      )
+                    ])
+                  ],
+                  1
+                )
+              })
+            ],
+            2
+          )
         ],
         1
       )
@@ -104792,6 +105059,56 @@ function httpFile() {
       'Content-Type': 'multipart/form-control'
     }
   });
+}
+
+/***/ }),
+
+/***/ "./resources/js/services/pedidoService.js":
+/*!************************************************!*\
+  !*** ./resources/js/services/pedidoService.js ***!
+  \************************************************/
+/*! exports provided: guardarPedido */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardarPedido", function() { return guardarPedido; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./api */ "./resources/js/services/api.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+function guardarPedido(_x) {
+  return _guardarPedido.apply(this, arguments);
+}
+
+function _guardarPedido() {
+  _guardarPedido = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(datos) {
+    var respuesta;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return Object(_api__WEBPACK_IMPORTED_MODULE_1__["http"])().post("/pedido", datos);
+
+          case 2:
+            respuesta = _context.sent;
+            return _context.abrupt("return", respuesta.data);
+
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _guardarPedido.apply(this, arguments);
 }
 
 /***/ }),
